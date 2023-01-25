@@ -1,0 +1,43 @@
+Standard ML of New Jersey (64-bit) v110.99.3 [built: Thu Jul 28 00:35:16 2022]
+- [opening ./../MySolution/assign00-01.sml]
+val fact = fn : int -> int
+val findOverflow = fn : int -> int
+val N = 21 : int
+val it = () : unit
+= Assign00-01-test passed!
+
+Standard ML of New Jersey (64-bit) v110.99.3 [built: Thu Jul 28 00:35:16 2022]
+- [opening ./../MySolution/assign00-02.sml]
+val isPrime = fn : int -> bool
+val it = () : unit
+= Assign00-02-test passed!
+
+Standard ML of New Jersey (64-bit) v110.99.3 [built: Thu Jul 28 00:35:16 2022]
+- [opening ./../MySolution/assign00-03.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val int2str = fn : int -> string
+val it = () : unit
+= Assign00-03-test passed!
+
+Standard ML of New Jersey (64-bit) v110.99.3 [built: Thu Jul 28 00:35:16 2022]
+- [opening ./../MySolution/assign00-04.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val str2int = fn : string -> int
+val it = () : unit
+= Assign00-04-test passed!
+
+Standard ML of New Jersey (64-bit) v110.99.3 [built: Thu Jul 28 00:35:16 2022]
+- [opening ./../MySolution/assign00-05.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val stringrev = fn : string -> string
+val it = () : unit
+= Assign00-05-test passed!
