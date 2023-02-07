@@ -49,13 +49,19 @@ int5_sort_nr(xs) for every 5-tuple xs of the type int5.
 *)
 (* ****** ****** *)
 
-fun
-int5_sort_nr(xs: int5): int5 =
 (*
 Please Give your implementation as follows:
 *)
+fun int5_sort_nr(xs: int5): int5 =
+if #1(xs) = #2(xs) then true
+else if #1(xs) = #2(xs) then false
+(* ****** ****** *)
 
+(* end of [CS320-2023-Spring-quiz01-int5_sort_nonrec.sml] *)
 
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-quiz01-int5_sort_nonrec.sml] *)
+
+(* ****** ****** *)
+
