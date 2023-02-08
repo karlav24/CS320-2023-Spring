@@ -253,29 +253,13 @@ in the given tuple are from the same deck.
 fun card5_fullhouse(cs: card5): bool
 //
 *)
-fun card5_fullhouse(cs: card5): bool =
-	let
-		val (y1, y2, y3, y4, y5) = (rank2int(card_rank(#1(cs))), rank2int(card_rank(#2(cs))), rank2int(card_rank(#3(cs))), rank2int(card_rank(#4(cs))), rank2int(card_rank(#5(cs))))
-		val ys = int5_sort (y1, y2, y3, y4, y5)
-	in
-		if #1(ys) <> #2(ys) then false 
-		else if #2(ys) <> #3(ys) then
-			if #3(ys) <> #4(ys) then false else 
-				if #4(ys) <> #5(ys) then false else true
-		else
-			if #4(ys) <> #5(ys) then false else true
-	end
 
-
-<<<<<<< HEAD
-=======
 fun
-card5_fullhouse(cs: card5): bool = false
->>>>>>> 85106db16e9e73bd3433316cfeb90bd794d43c0a
+card5_fullhouse(cs: card5): bool =
 (*
 Please Give your implementation as follows:
 *)
 
 (* ****** ****** *)
 
-(* end of [CS320-2023-Spring-quiz01-card5_fullhouse.sml] *)
+(* end of [CS320-2023-Spring-quiz01-card5_fullhouse2.sml] *)
