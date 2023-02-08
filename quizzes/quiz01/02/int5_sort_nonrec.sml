@@ -52,12 +52,43 @@ int5_sort_nr(xs) for every 5-tuple xs of the type int5.
 (*
 Please Give your implementation as follows:
 *)
-fun int5_sort_nr(xs: int5): int5 =
-if #1(xs) = #2(xs) then true
-else if #1(xs) = #2(xs) then false
-(* ****** ****** *)
+fun int2_sort(cs: int2): int2 =
+  if #1(cs) <= #2(cs) then cs
+  else (#2(cs), #1(cs))
+    
+fun int4_sort(cs1: int2, cs2: int2): int4 =
+  if #1(cs1) > #2(cs2) then (#1(cs2), #2(cs2), #1(cs1), #2(cs1))
+  else 
+    if #2(cs1) <= #1(cs2) then (#1(cs1), #2(cs1), #1(cs2), #2(cs2))
+    else
+      if #1(cs1) >= #1(cs2) then
+        if #2(cs1) <= #2(cs2) then (#1(cs2), #1(cs1), #2(cs1), #2(cs2))
+        else
+          (#1(cs2), #1(cs1), #2(cs2), #2(cs1))
+      else
+        if #2(cs1) <= #2(cs2) then (#1(cs1), #1(cs2), #2(cs1), #2(cs2))
+        else
+          (#1(cs1), #1(cs2), #2(cs2), #2(cs1))
 
-(* end of [CS320-2023-Spring-quiz01-int5_sort_nonrec.sml] *)
+fun
+int5_sort_nr(xs: int5): int5 =
+  let
+    val frst = (#1(xs), #2(xs))
+    val snd = (#3(xs), #4(xs))
+    val trd = #5(xs)
+    val int2frst = int2_sort(frst)
+    val int2snd = int2_sort(snd)
+    val int4sort = int4_sort(int2frst, int2snd)
+  in
+    if trd >= #4(int4sort) then (#1(int4sort),#2(int4sort),#3(int4sort),#4(int4sort), trd)
+    else
+      if trd >= #3(int4sort) then (#1(int4sort),#2(int4sort),#3(int4sort),trd,#4(int4sort))
+      else
+        if trd >= #2(int4sort) then (#1(int4sort),#2(int4sort),trd,#3(int4sort),#4(int4sort))
+        else
+          if trd >= #1(int4sort) then (#1(int4sort),trd,#2(int4sort),#3(int4sort),#4(int4sort))
+          else (trd,#1(int4sort),#2(int4sort),#3(int4sort),#4(int4sort))
+  end
 
 (* ****** ****** *)
 
