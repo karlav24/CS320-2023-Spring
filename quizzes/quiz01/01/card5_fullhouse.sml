@@ -267,11 +267,6 @@ fun card5_fullhouse(cs: card5): bool =
 	end
 
 
-<<<<<<< HEAD
-=======
-fun
-card5_fullhouse(cs: card5): bool = false
->>>>>>> 85106db16e9e73bd3433316cfeb90bd794d43c0a
 (*
 Please Give your implementation as follows:
 *)
