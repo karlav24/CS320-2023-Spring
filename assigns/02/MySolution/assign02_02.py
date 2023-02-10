@@ -15,25 +15,28 @@ def mylist_append(xs, ys):
         return ys
     else:
         return mylist_cons(xs.get_cons1(), mylist_append(xs.get_cons2(), ys))
-        
-def mylist_quicksort(xs):
-    if mylist_nilq(xs):
-        return xs
-    else:
-        pivot = xs.cons1
-        less = mylist_nil()
-        greater = mylist_nil()
-        
-        def partition(lst, pivot, less, greater):
-            if mylist_nilq(lst):
-                return (less, greater)
-            else:
-                if lst.cons1 < pivot:
-                    less = mylist_cons(lst.cons1, less)
-                else:
-                    greater = mylist_cons(lst.cons1, greater)
-                return partition(lst.cons2, pivot, less, greater)
-        
-        less, greater = partition(xs.cons2, pivot, less, greater)
-        return mylist_append(mylist_quicksort(less), mylist_cons(pivot, mylist_quicksort(greater)))
 
+def mylist_quicksort(xs):
+        def qsort(xs):
+            if mylist_nilq(xs):
+                return xs
+            pivot = xs.get_cons1()
+            less_than, greater_than = partition(xs.get_cons2(), pivot)
+            return mylist_concatenate(qsort(less_than), mylist_cons(pivot, qsort(greater_than)))
+    
+        def partition(xs, pivot):
+            if mylist_nilq(xs):
+                return (mylist_nil(), mylist_nil())
+            first = xs.get_cons1()
+            if first <= pivot:
+                less_than, greater_than = partition(xs.get_cons2(), pivot)
+                return (mylist_cons(first, less_than), greater_than)
+            else:
+                less_than, greater_than = partition(xs.get_cons2(), pivot)
+                return (less_than, mylist_cons(first, greater_than))
+        
+        def mylist_concatenate(xs1, xs2):
+            if mylist_nilq(xs1):
+                return xs2
+            return mylist_cons(xs1.get_cons1(), mylist_concatenate(xs1.get_cons2(), xs2))
+        return qsort(xs)
