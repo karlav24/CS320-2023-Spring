@@ -20,14 +20,20 @@ def mylist_quicksort(xs):
     if mylist_nilq(xs):
         return xs
     else:
-        pivot = xs.get_cons1()
-        smaller_list = mylist_nil()
-        bigger_list = mylist_nil()
-        curr = xs.get_cons2()
-        while not mylist_nilq(curr):
-            if curr.get_cons1() <= pivot:
-                smaller_list = mylist_cons(curr.get_cons1(), smaller_list)
+        pivot = xs.cons1
+        less = mylist_nil()
+        greater = mylist_nil()
+        
+        def partition(lst, pivot, less, greater):
+            if mylist_nilq(lst):
+                return (less, greater)
             else:
-                bigger_list = mylist_cons(curr.get_cons1(), bigger_list)
-            curr = curr.get_cons2()
-        return mylist_append(mylist_quicksort(smaller_list), mylist_cons(pivot, mylist_quicksort(bigger_list)))
+                if lst.cons1 < pivot:
+                    less = mylist_cons(lst.cons1, less)
+                else:
+                    greater = mylist_cons(lst.cons1, greater)
+                return partition(lst.cons2, pivot, less, greater)
+        
+        less, greater = partition(xs.cons2, pivot, less, greater)
+        return mylist_append(mylist_quicksort(less), mylist_cons(pivot, mylist_quicksort(greater)))
+
