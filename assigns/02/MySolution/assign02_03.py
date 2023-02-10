@@ -11,34 +11,39 @@ print("[import ./../assign02.py] is done!")
 #
 ####################################################
 def mylist_mergesort(xs):
-    if mylist_nilq(xs) or mylist_nilq(xs.get_cons2()):
+    if mylist_nilq(xs) or mylist_nilq(xs.cons2):
         return xs
     else:
-        xs1, xs2 = mylist_split(xs)
-        return mylist_merge(mylist_mergesort(xs1), mylist_mergesort(xs2))
+        def split_list(lst, mid, left, right):
+            if mylist_nilq(lst):
+                return (left, right)
+            else:
+                if mid == 0:
+                    right = mylist_cons(lst.cons1, right)
+                    return split_list(lst.cons2, mid, left, right)
+                else:
+                    left = mylist_cons(lst.cons1, left)
+                    return split_list(lst.cons2, mid-1, left, right)
+        
+        mid = mylist_size(xs) // 2
+        left = mylist_nil()
+        right = mylist_nil()
+        
+        left, right = split_list(xs, mid, left, right)
+        
+        left = mylist_mergesort(left)
+        right = mylist_mergesort(right)
+        
+        return mylist_merge(left, right)
 
-def mylist_split(xs):
-    slow = xs
-    fast = xs.get_cons2()
-    while not mylist_nilq(fast) and not mylist_nilq(fast.get_cons2()):
-        slow = slow.get_cons2()
-        fast = fast.get_cons2().get_cons2()
-    xs1 = xs
-    xs2 = slow.get_cons2()
-    slow.ctag = 0
-    slow.cons2 = mylist_nil()
-    return xs1, xs2
-
-def mylist_merge(xs1, xs2):
-    if mylist_nilq(xs1):
-        return xs2
-    elif mylist_nilq(xs2):
-        return xs1
+def mylist_merge(left, right):
+    if mylist_nilq(left):
+        return right
+    elif mylist_nilq(right):
+        return left
     else:
-        x1 = xs1.get_cons1()
-        x2 = xs2.get_cons1()
-        if x1 <= x2:
-            return mylist_cons(x1, mylist_merge(xs1.get_cons2(), xs2))
+        if left.cons1 < right.cons1:
+            return mylist_cons(left.cons1, mylist_merge(left.cons2, right))
         else:
-            return mylist_cons(x2, mylist_merge(xs1, xs2.get_cons2()))
+            return mylist_cons(right.cons1, mylist_merge(left, right.cons2))
 
