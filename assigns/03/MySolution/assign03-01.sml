@@ -20,5 +20,20 @@ find_root(f0: int -> int): int = ...
 *)
 
 (* ****** ****** *)
+fun
+find_root(f0: int -> int): int =
+let
+exception ZERO of int 
+  fun find_root_helper(x: int): int =
+   if f0(x) = 0
+   then raise ZERO(x)
+   else if f0(~x) = 0
+   then raise ZERO(~x)
+   else
+   find_root_helper(x+1)
+in
+  find_root_helper(0) handle ZERO(x) =>x
+end
+
 
 (* end of [CS320-2023-Spring-assign03-01.sml] *)
