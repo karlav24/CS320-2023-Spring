@@ -21,7 +21,13 @@ the list_range function
 //
 fun list_range(start: int, finish: int): int list
 *)
+fun list_range_helper(start: int, finish: int, newList: int list): int list =
+ if start >= finish
+ then newList
+ else list_range_helper(start, finish-1, finish-1::newList )
 
+fun list_range(start: int, finish: int): int list =
+ list_range_helper(start, finish, [])
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-assign03-02.sml] *)
