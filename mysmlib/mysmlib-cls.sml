@@ -39,6 +39,20 @@ if claim
 
 (* ****** ****** *)
 
+val abs_int =
+fn(i0: int) =>
+if i0 >= 0 then i0 else ~i0
+
+(* ****** ****** *)
+
+fun
+pow_int_int
+(x: int, y: int): int =
+if y <= 0
+then 1 else x * pow_int_int(x, y-1)
+
+(* ****** ****** *)
+
 fun
 char_of_digit
 (digit: int): char =
@@ -130,6 +144,19 @@ list_map
 case xs of
   nil => nil
 | x1 :: xs => fopr(x1) :: list_map(xs, fopr)
+)
+
+(* ****** ****** *)
+
+fun
+list_filter
+(xs: 'a list, test: 'a -> bool): 'a list =
+(
+case xs of
+  nil => nil
+| x1 :: xs =>
+  if test(x1)
+  then x1 :: list_filter(xs, test) else list_filter(xs, test)
 )
 
 (* ****** ****** *)
@@ -227,9 +254,9 @@ end (* end of [int1_foreach(n0, work)]: let *)
 
 (* ****** ****** *)
 
-fun
-string_foreach
-(cs: string, work: char -> unit) =
+val
+string_foreach =
+fn( cs, work ) =>
 int1_foreach
 (String.size(cs), fn(i) => work(String.sub(cs, i)))
 
@@ -280,13 +307,6 @@ end (* end of [foreach_to_forall]: let *)
 
 (* ****** ****** *)
 
-val
-list_forall =
-fn(xs, test) =>
-foreach_to_forall(list_foreach)(xs, test)
-
-(* ****** ****** *)
-
 fun
 foreach_to_foldleft
 ( foreach
@@ -301,13 +321,6 @@ foreach
 ( xs
 , fn(x0) => res := fopr(!res, x0)); !res
 end (* end of [foreach_to_foldleft]: let *)
-
-(* ****** ****** *)
-
-val
-list_foldleft =
-fn(r0,xs,fopr) =>
-foreach_to_foldleft(list_foreach)(r0,xs,fopr)
 
 (* ****** ****** *)
 
@@ -371,6 +384,70 @@ fn(xs) =>
 
 (* ****** ****** *)
 
+fun
+foreach_to_map_list
+(
+foreach:
+('xs * ('x0->unit))->unit)
+:
+('xs * ('x0 -> 'y0)) -> 'y0 list
+=
+(
+fn(xs, fopr) =>
+list_reverse
+(
+foreach_to_foldleft
+(foreach)(nil, xs, fn(r0, x0) => fopr(x0) :: r0)))
+
+(* ****** ****** *)
+
+fun
+foreach_to_filter_list
+(
+foreach:
+('xs * ('x0->unit))->unit)
+:
+('xs * ('x0 -> bool)) -> 'x0 list
+=
+(
+fn(xs, test) =>
+list_reverse
+(
+foreach_to_foldleft(foreach)
+( nil, xs
+, fn(r0, x0) => if test(x0) then x0 :: r0 else r0)))
+
+(* ****** ****** *)
+
+val
+int1_forall =
+fn(xs, test) =>
+foreach_to_forall(int1_foreach)(xs, test)
+
+(* ****** ****** *)
+
+val
+list_forall =
+fn(xs, test) =>
+foreach_to_forall(list_foreach)(xs, test)
+
+(* ****** ****** *)
+
+val
+string_forall =
+fn( cs, test ) =>
+int1_forall
+(String.size(cs), fn(i) => test(String.sub(cs, i)))
+
+(* ****** ****** *)
+
+val
+list_get_at =
+fn(xs, i0) =>
+foreach_to_get_at(list_foreach)(xs, i0)
+
+(* ****** ****** *)
+
 val
 int1_listize =
 fn(xs) => foreach_to_listize(int1_foreach)(xs)
@@ -392,6 +469,41 @@ fn(xs) => foreach_to_listize(string_foreach)(xs)
 val
 string_rlistize =
 fn(xs) => foreach_to_rlistize(string_foreach)(xs)
+
+(* ****** ****** *)
+
+val
+int1_foldleft =
+fn(r0,xs,fopr) =>
+foreach_to_foldleft(int1_foreach)(r0,xs,fopr)
+val
+int1_foldright =
+fn(xs,r0,fopr) =>
+int1_foldleft(r0, xs, fn(r0, x0) => fopr(xs-1-x0, r0))
+
+(* ****** ****** *)
+
+val
+list_foldleft =
+fn(r0,xs,fopr) =>
+foreach_to_foldleft(list_foreach)(r0,xs,fopr)
+val
+list_foldright =
+fn(xs,r0,fopr) =>
+foreach_to_foldleft(list_foreach)(list_reverse(xs), r0,fopr)
+
+(* ****** ****** *)
+
+val
+string_foldleft =
+fn( r0,cs,fopr ) =>
+int1_foldleft
+(r0, String.size(cs), fn(r0, i0) => fopr(r0, String.sub(cs, i0)))
+val
+string_foldright =
+fn( cs,r0,fopr ) =>
+int1_foldright
+(r0, String.size(cs), fn(i0, r0) => fopr(String.sub(cs, i0), r0))
 
 (* ****** ****** *)
 
