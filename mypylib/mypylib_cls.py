@@ -66,6 +66,18 @@ class fnlist_cons(fnlist):
         return self.cons2
 # end-of-class(fnlist_cons)
 
+def fnlist_print(xs):
+    nx = 0
+    sep = ";"
+    print("[",end='')
+    while(xs.ctag > 0):
+        if (nx > 0):
+            print(sep,end='')        
+        print(xs.cons1,end='')
+        nx = nx + 1; xs = xs.cons2
+    print("]", end='')
+# end-of-[fnlist_print]
+
 def fnlist_foreach(xs, work_func):
     while(xs.ctag > 0):
         x0 = xs.cons1
@@ -99,6 +111,16 @@ def pylist_rforeach(xs, work_func):
         work_func(x0)
     return None # work_func(i0) is done for all x0 in reversed(xs)
 
+def pylist_map(xs, fopr_func):
+    return foreach_to_map_pylist(pylist_foreach)(xs, fopr_func)
+def pylist_map_pylist(xs, fopr_func):
+    return foreach_to_map_pylist(pylist_foreach)(xs, fopr_func)
+
+def pylist_filter(xs, test_func):
+    return foreach_to_filter_pylist(pylist_foreach)(xs, test_func)
+def pylist_filter_pylist(xs, test_func):
+    return foreach_to_filter_pylist(pylist_foreach)(xs, test_func)
+
 def pylist_fnlistize(xs):
     return foreach_to_rfnlistize(pylist_rforeach)(xs)
 
@@ -130,6 +152,9 @@ def string_pylistize(xs):
     return foreach_to_pylistize(string_foreach)(xs)
 def string_rpylistize(xs):
     return foreach_to_rpylistize(string_foreach)(xs)
+
+def string_make_pylist(xs): return "".join(xs)
+def string_make_fnlist(xs): return "".join(fnlist_pylistize(xs))
 
 ###########################################################################
 
@@ -187,6 +212,20 @@ def rforeach_to_foldright(rforeach):
 
 ###########################################################################
 
+def foreach_to_iforeach(foreach):
+    def iforeach(xs, iwork_func):
+        i0 = 0
+        def work_func(x0):
+            nonlocal i0
+            iwork_func(i0, x0)
+            i0 = i0 + 1
+            return None
+        foreach(xs, work_func)
+        return None
+    return iforeach # foreach-function is turned into iforeach-function
+
+###########################################################################
+
 def foreach_to_pylistize(foreach):
     def pylistize(xs):
         res = []
@@ -221,6 +260,54 @@ def foreach_to_rfnlistize(foreach):
         foreach(xs, work_func)
         return res
     return rfnlistize # foreach-function is turned into rfnlistize-function
+
+###########################################################################
+
+def foreach_to_map_pylist(foreach):
+    def map_pylist(xs, fopr_func):
+        res = []
+        def work_func(x0):
+            nonlocal res
+            res.append(fopr_func(x0))
+            return None
+        foreach(xs, work_func)
+        return res
+    return map_pylist # foreach-function is turned into map_pylist-function
+
+def foreach_to_map_fnlist(foreach):
+    return \
+        lambda xs, fopr_func: \
+        funlist_make_pylist(foreach_to_map_fnlist(foreach)(xs, fopr_func))
+
+def foreach_to_map_rfnlist(foreach):
+    def map_rfnlist(xs, fopr_func):
+        res = fnlist_nil()
+        def work_func(x0):
+            nonlocal res
+            res = fnlist_cons(fopr_func(x0), res)
+            return None
+        foreach(xs, work_func)
+        return res
+    return map_rfnlist # foreach-function is turned into map_rfnlist-function
+
+###########################################################################
+
+def foreach_to_filter_pylist(foreach):
+    def filter_pylist(xs, test_func):
+        res = []
+        def work_func(x0):
+            nonlocal res
+            if test_func(x0):
+                res.append(x0)
+            return None
+        foreach(xs, work_func)
+        return res
+    return filter_pylist # foreach-function is turned into map_pylist-function
+
+def foreach_to_filter_fnlist(foreach):
+    return \
+        lambda xs, test_func: \
+        funlist_make_pylist(foreach_to_filter_fnlist(foreach)(xs, test_func))
 
 ###########################################################################
 
