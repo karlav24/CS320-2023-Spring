@@ -30,21 +30,28 @@ fun
 list_pairing
 (xs: 'a list): ('a * 'a) list * 'a option = ...
 *)
+fun
+list_sub(xs: 'a list, itr: int): 'a =
+	if itr = 0 then hd(xs)
+	else list_sub(tl(xs), itr-1)	
+    
 fun list_pairing(xs: 'a list): ('a * 'a) list * 'a option =
-  let
-  fun helper(xs:'a list, ys:'a list):('a * 'a) list * 'a option = 
-      | helper([x], []) = ([], SOME x)
-      | helper(x::xs, y::[]) = ([(x,x)], SOME x)
-      | helper(x::xs, y::ys) =
-          let
-            val (rest_pairs, middle) = helper(xs, ys)
-          in
-            ((x, y)::rest_pairs, middle)
-          end
-  in
-    helper(xs, [])
-  end
-
+    let
+        val rev = list_reverse(xs)
+        val mid = list_length(xs) div 2
+        fun pair_aid(xs: 'a list, ys: 'a list, itr: int): ('a * 'a) list =
+            if itr = 0 then nil
+            else (case xs of
+                nil => nil
+              | x1::xs' => [(x1, hd(ys))] @ pair_aid(xs', tl(ys), itr-1)
+            )
+    in
+        (case list_length(xs) mod 2 = 0 of
+            true => (pair_aid(xs, rev, list_length(xs)), NONE)
+          | false => (pair_aid(xs, rev, list_length(xs)), SOME(list_sub(xs, mid)))
+        )
+    handle _ => (nil, NONE)
+    end
 
 
 (* ****** ****** *)
