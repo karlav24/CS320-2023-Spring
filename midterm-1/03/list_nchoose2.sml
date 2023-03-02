@@ -33,6 +33,25 @@ fun
 list_nchoose2(xs: int list): (int * int) list = ...
 *)
 
+fun list_nchoose2(xs: int list): (int * int) list =
+    let
+        fun combine(y: int, ys: int list): (int * int) list =
+            case ys of
+                [] => []
+              | y' :: ys' =>
+                    if y < y' then
+                        (y, y') :: combine(y, ys')
+                    else if y > y' then
+                        (y', y) :: combine(y, ys')
+                    else
+                        combine(y, ys')
+    in
+        case xs of
+            [] => []
+          | x :: xs' => combine(x, xs') @ list_nchoose2(xs')
+    end
+
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-midterm1-list_nchoose2.sml] *)

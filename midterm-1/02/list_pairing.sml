@@ -30,6 +30,23 @@ fun
 list_pairing
 (xs: 'a list): ('a * 'a) list * 'a option = ...
 *)
+fun list_pairing(xs: 'a list): ('a * 'a) list * 'a option =
+  let
+  fun helper(xs:'a list, ys:'a list):('a * 'a) list * 'a option = 
+      | helper([x], []) = ([], SOME x)
+      | helper(x::xs, y::[]) = ([(x,x)], SOME x)
+      | helper(x::xs, y::ys) =
+          let
+            val (rest_pairs, middle) = helper(xs, ys)
+          in
+            ((x, y)::rest_pairs, middle)
+          end
+  in
+    helper(xs, [])
+  end
+
+
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-midterm1-list_pairing.sml] *)
