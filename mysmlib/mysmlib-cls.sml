@@ -655,4 +655,63 @@ fn(xs, r0, ifopr) =>
 foreach_to_ifoldleft(vector_foreach)(xs, r0, ifopr)
 (* ****** ****** *)
 
+fun
+list_zip2
+( xs: 'a list
+, ys: 'b list): ('a * 'b) list =
+(
+case xs of
+  nil => nil
+| x1 :: xs =>
+  (
+  case ys of
+    nil => nil
+  | y1 :: ys =>
+    (x1, y1) :: list_zip2(xs, ys))
+) (* end of [list_zip2(xs, ys)]: case *)
+
+(* ****** ****** *)
+
+fun
+list_z2map
+( xs: 'a list
+, ys: 'b list
+, fopr: 'a * 'b -> 'c): 'c list =
+(
+case xs of
+  nil => nil
+| x1 :: xs =>
+  (
+  case ys of
+    nil => nil
+  | y1 :: ys =>
+    fopr(x1, y1) :: list_z2map(xs, ys, fopr))
+) (* end of [list_z2map(xs, ys, fopr)]: case *)
+
+(* ****** ****** *)
+
+(*
+HX: Row-major
+*)
+fun
+list_cross2_row
+( xs: 'a list
+, ys: 'b list): ('a*'b) list =
+list_concat
+(list_map(xs, fn(x0) => list_map(ys, fn(y0) => (x0, y0))))
+
+(* ****** ****** *)
+
+(*
+HX: Column-major
+*)
+fun
+list_cross2_col
+( xs: 'a list
+, ys: 'b list): ('a*'b) list =
+list_concat
+(list_map(ys, fn(y0) => list_map(xs, fn(x0) => (x0, y0))))
+
+(* ****** ****** *)
+
 (* end of [BUCASCS320-2023-Spring-mysmlib-cls.sml] *)
