@@ -61,40 +61,36 @@ the previous.
 fun
 magic_triangle (n : int) : int list list = ...
 *)
-fun last (xs : 'a list) =
+fun last(xs: 'a list): 'a =
   case xs of
     [] => raise Empty
   | [x] => x
-  | x :: xs' => last xs'
+  | _::xs' => last(xs')
 
-fun magic_triangle (n : int) : int list list =
+fun next_row(prev: int list): int list =
     let
-        fun next_row prev_row = 
-            let 
-                fun sum_pairs xs =
-                    case xs of 
-                        [] => []
-                      | [x] => [x]
-                      | x::y::ys => (x+y)::sum_pairs (y::ys)
-            in
-                [1] @ sum_pairs prev_row @ [1]
-            end
-
-        fun helper n row acc =
-            if n < row then
-                list_reverse acc
-            else if row = 1 then
-                helper n (row+1) [[1]] 
-            else
-                let 
-                    val new_row = next_row (last acc)
-                in
-                    helper n (row+1) (new_row :: acc)
-                end
+        fun sum_pairs(xs: int list): int list =
+            case xs of
+                [] => []
+              | [_] => []
+              | x::y::ys => (x+y)::sum_pairs(y::ys)
     in
-        helper n 1 []
+        [1] @ sum_pairs(prev) @ [1]
     end
 
+fun triangle(n: int): int list list =
+    let
+        fun helper(0, acc) = acc
+          | helper(k, acc) = helper(k-1, acc@[next_row(last acc)])
+    in
+        helper(n, [[1]])
+    end
+
+(* ****** ****** *)
+
+(* end of [CS320-2023-Spring-midterm1-magic_triangle.sml] *)
+
+(* ****** ****** *)
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-midterm1-magic_triangle.sml] *)
