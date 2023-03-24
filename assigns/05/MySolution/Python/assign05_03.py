@@ -153,9 +153,77 @@ def image_seam_carving_color(image, ncol):
     Starting from the given image, use the seam carving technique to remove
     ncols (an integer) columns from the image. Returns a new image.
     """
+    def path(energy,n,ww):
+        if n < ww:
+            energy[n] = (energy[n],2)
+        elif n % ww == 0:
+            r = energy[n] + energy[n - ww][0]
+            c = energy[n] + energy[(n - ww) + 1][0]
+            if r <= c:
+                energy[n] = (r,0)
+            else:
+                energy[n] = (c,1)
+        elif (n + 1) % ww == 0:
+            l = energy[n] + energy[(n - ww) - 1][0]
+            c = energy[n] + energy[n - ww][0]
+
+            if c < l:
+                energy[n] = (c,0)
+            else:
+                energy[n] = (l, -1)
+        else:
+            l = energy[n] + energy[(n - ww) - 1][0]
+            c = energy[n] + energy[n - ww][0]
+            r = energy[n] + energy[(n - ww) + 1][0]
+
+            if l <= r and l <= c:
+                energy[n] = (l,-1)
+            elif c <= r:
+                energy[n] = (c, 0)
+            else:
+                energy[n] = (r,1)
+        return None
+
+    def seam_val(energy,ww,hh):
+        int1_foreach(ww * hh, lambda r: path(energy,r,ww))        
+        return energy
+    
+    def remove_seam(image):
+        ww = image.width
+        hh = image.height
+        size = ww * hh
+        energy = image_edges_color(image)
+        imageList = image.pixlst
+        energyList = list(energy.pixlst)
+        seam = seam_val(energyList, ww,hh)
+        minimum = seam[size - ww][0]
+        l = size - ww
+        for i in range(size - ww, size):
+            if seam[i][0] < minimum:
+                minimum = seam[i][0]
+                l = i
+        row = hh - 1
+        remove = []
+        while row >= 0:
+            remove = pylist_append([l % ww],remove)
+            if seam[l][1] == 2:
+                break
+            elif seam[l][1] == -1:
+                l = (l - ww) - 1
+            elif seam[l][1] == 0:
+                l = (l - ww)
+            else:
+                l = (l - ww) + 1
+            row = row - 1
+        image = imgvec.image(hh, ww-1, imgvec.image_i2filter_pylist(image, lambda r0, r1, x: remove[r0] != r1))
+        return image
+    
     assert ncol < image.width
-    energy = image_edges_color(image)
-    raise NotImplementedError
+    
+    eng = image_edges_color(image)
+    image = imgvec.image(image.height, image.width, list(image.pixlst))
+    res = int1_foldleft(ncol, image, lambda r,x0: remove_seam(r))
+    return imgvec.image_make_pylist(res.height, res.width, res.pixlst)
 
 ####################################################
 # save_color_image(image_seam_carving_color(balloons, 100), "OUTPUT/balloons_seam_carving_100.png")
