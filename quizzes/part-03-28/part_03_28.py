@@ -101,7 +101,7 @@ def image_rotate_180r(image):
     hh = image.height
     return \
         imgvec.image_make_pylist\
-        (ww, hh, int1_map_pylist(hh*ww, lambda ij: imgvec.image_get_pixel(image, ij//hh, ij%hh)))
+        (ww, h h, int1_map_pylist(hh*ww, lambda ij: imgvec.image_get_pixel(image, ij//hh, ij%hh)))
 ####################################################
 balloons = \
      load_color_image\
