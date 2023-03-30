@@ -2,6 +2,7 @@
 import sys
 sys.path.append('./../../MySolution/Python')
 from assign05_03 import *
+import imgvec
 ######################################################
 balloons = \
     load_color_image\
