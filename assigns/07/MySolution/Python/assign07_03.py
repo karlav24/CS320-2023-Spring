@@ -9,6 +9,7 @@ sys.path.append('./../../../../mypylib')
 from dictwords import *
 from mypylib_cls import *
 from assign05_02 import *
+import queue
 ####################################################
 """
 HX-2023-03-24: 10 points
@@ -38,5 +39,15 @@ def doublet_bfs_test(w1, w2):
     it returns a path connecting w1 and w2 that attests to the
     two words forming a doublet.
     """
-    raise NotImplementedError
+    def fchildren(nxs):
+        neighbor = word_neighbors(nxs)
+        x = foreach_to_filter_fnlist(fnlist_foreach)(neighbor, lambda r: word_is_legal(r))
+        return x
+    
+    doublet = stream_make_filter(gpath_bfs([w1], fchildren), lambda r1: r1[-1] == w2)()
+
+    if doublet.get_ctag() == 0:
+        return None
+    else:
+        return doublet.get_cons1()
 ####################################################
