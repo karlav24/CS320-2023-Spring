@@ -16,6 +16,24 @@ stream_permute_list(xs: 'a list): 'a list stream = ...
 //
 *)
 
+fun
+stream_permute_list(xs: 'a list): 'a list stream = 
+let
+  fun insert(x, []) = [[x]]
+  | insert(x, (y::ys)) =
+  (x::y::ys) :: list_map((insert(x, ys)), (fn ys => y::ys))
+
+  fun permutate([]) = list_streamize [[]]
+  | permutate((x::xs)) =
+        let
+            val permute = permutate(xs)
+        in
+            stream_concat(stream_make_map(permute, (fn x1 => list_streamize(insert(x, x1))))) 
+        end
+in
+    permutate(xs)
+end
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-assign08-01.sml] *)

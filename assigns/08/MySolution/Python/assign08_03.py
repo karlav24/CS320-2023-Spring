@@ -1,6 +1,8 @@
 ####################################################
 #!/usr/bin/env python3
 ####################################################
+import queue
+from collections import deque
 """
 HX-2023-04-07: 20 points
 The following implementation is stream-based:
@@ -25,9 +27,19 @@ The following implementation is stream-based:
 #     return lambda: helper(qnxs)
 Please give a generator-based implementation of graph_bfs!!!
 """
+
 def generator_graph_bfs(nxs, fnexts):
     """
     This function does the same as graph_bfs.
     """
-    raise NotImplementedError
+    visited = set()
+    qnxs = deque(nxs)
+    while qnxs:
+        nx = qnxs.pop()
+        if nx not in visited:
+            visited.add(nx)
+            yield nx
+            for nx2 in fnexts(nx):
+                if nx2 not in visited:
+                    qnxs.append(nx2)
 ####################################################
