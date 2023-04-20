@@ -17,6 +17,20 @@ use "./../../mysmlib/mysmlib-cls.sml";
 // enumerating all the maximal drawdowns in fxs.
 //
 *)
+fun stream_drawdowns(fxs: int stream): int list stream = 
+     let
+        fun assis(curr: int list, fxs: int stream): int list stream = fn() =>
+            case fxs() of
+                strcon_nil => strcon_nil
+                |strcon_cons(x, xs) =>
+                    case curr of
+                        [] => assis([x], xs)()
+                        |hd::tl => 
+                            if x <= hd then assis(x::curr, xs)()
+                            else strcon_cons(list_reverse(curr), assis([x], xs))
+    in
+        assis([], fxs)
+    end
 
 (* ****** ****** *)
 

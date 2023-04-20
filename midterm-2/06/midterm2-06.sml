@@ -41,6 +41,15 @@ perm_counting_out
 (xs: int list, k0: int): int list = ...
 *)
 
+fun perm_counting_out( xs:int list, k0:int):int list =
+  let
+    fun count (i, [], ys) = ys
+    | count (i, x::xs, ys) =
+          if i = k0 then count (0, xs, ys@[x])
+          else count (i+1, xs@[x], ys)
+  in
+    count (0, xs, [])
+  end
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-midterm2-06.sml] *)
