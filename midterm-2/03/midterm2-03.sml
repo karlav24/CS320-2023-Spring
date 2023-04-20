@@ -21,17 +21,11 @@ stream_zipstrm
 : 'a stream stream): 'a stream stream = ...
 *)
 fun stream_zipstrm(fxss: 'a stream stream): 'a stream stream = fn() =>    
-
     let
-
         fun helper(xs, x) =
-
         let
-
                 val help = foreach_to_foldleft(stream_foreach)(xs, fn() => strcon_nil, fn(a, strm) => stream_append(a, fn() => strcon_cons(stream_get_at(strm, x), fn() => strcon_nil)))
-
         in
-
                   strcon_cons(help, fn() => helper(xs, x+1) )
 
         end handle Subscript => strcon_nil
