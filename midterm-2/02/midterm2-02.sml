@@ -29,6 +29,22 @@ fun
 mytree_dfs_streamize(t0: 'a mytree): 'a stream = ...
 *)
 
+
+fun mytree_dfs_streamize(t0: 'a mytree): 'a stream =
+    let
+        fun traverse(mytree_node(x, children)) =
+            let
+                fun traverse_children(children) =
+                    case children of
+                        [] => stream_nil()
+                      | t::ts => stream_append(mytree_dfs_streamize(t), traverse_children(ts))
+            in
+                stream_cons(x, fn () => traverse_children(children)())
+            end
+    in
+        traverse(t0)
+    end
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Spring-midterm2-02.sml] *)
