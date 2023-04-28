@@ -321,4 +321,9 @@ val ans1 = true : bool
 val ans2 = false : bool
 
 Assign09-03-test passed!
+[nltk_data] Downloading package words to /Users/karlala/nltk_data...
+[nltk_data]   Package words is already up-to-date!
+myguess =  enlist
+myguess =  spring
+myguess =  chrysanthemum
 Assign09-04-test passed!
