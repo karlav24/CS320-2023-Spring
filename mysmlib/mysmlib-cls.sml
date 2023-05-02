@@ -856,7 +856,6 @@ val
 array_streamize =
 fn(arr) =>
 stream_tabulate
-(Array.length(arr), fn i => Array.sub(arr, i))
 val
 vector_streamize =
 fn(vec) =>

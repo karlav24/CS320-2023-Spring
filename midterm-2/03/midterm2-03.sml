@@ -31,7 +31,6 @@ fun stream_zipstrm(fxss: 'a stream stream): 'a stream stream = fn() =>
         end handle Subscript => strcon_nil
 
     in
-
         helper(fxss,0)
         
     end
